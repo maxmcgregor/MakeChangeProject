@@ -7,24 +7,19 @@ public class MakeChange {
 	static int itemPrice;
 	static int amountPaid;
 	static int changeNeeded;
-	static int billsNeeded;
-	static int coinsNeeded;
 	static boolean customerPresent = true;
 	static Scanner scanner = new Scanner(System.in);
 
 	public static void main(String[] args) {
 
 		while (customerPresent) {
-
-			changeCalculator();
-
-			transaction();
 			
+			changeCalculator();
+			transaction();
 			if (customerPresent) {
-				customerPresent();				
+				customerPresent();
 			}
 		}
-
 		scanner.close();
 	}
 
@@ -37,82 +32,74 @@ public class MakeChange {
 		scanner.nextLine();
 
 		changeNeeded = amountPaid - itemPrice;
-		billsNeeded = changeNeeded / 100;
-		coinsNeeded = changeNeeded - (billsNeeded * 100);
 
 	}
 
 	public static void transaction() {
 		if (amountPaid == itemPrice) {
 
-			System.out.println("\nThat's exact change. Thank you, have a nice day!");
+			System.out.println("\nThat's exact change. Thank you, have a nice day!\n");
 
 		} else if (amountPaid < itemPrice) {
 
-			double amountOwed = itemPrice - amountPaid;
 			System.err.println("\nYour item costs more than you paid. Please pay the difference.\n");
 			customerPresent = false;
 
 		} else {
 
-			billCalculator();
-			coinsCalculator();
+			denominationCalculator();
 
 		}
 	}
 
-	public static void billCalculator() {
+	public static void denominationCalculator() {
 		// feel like this could be a method that passes bill type & denomination
 		// (twenties/20, tens/10, etc) but had trouble figuring it out cleanly
 		System.out.println("\nChange to be given as follows: \n");
 
-		int twenties = billsNeeded / 20;
+		int twenties = changeNeeded / 2000;
 		if (twenties != 0) {
-			billsNeeded -= (twenties * 20);
+			changeNeeded -= (twenties * 2000);
 			System.out.println("Twenties: " + twenties);
 		}
 
-		int tens = billsNeeded / 10;
+		int tens = changeNeeded / 1000;
 		if (tens != 0) {
-			billsNeeded -= (tens * 10);
+			changeNeeded -= (tens * 1000);
 			System.out.println("Tens: " + tens);
 		}
 
-		int fives = billsNeeded / 5;
+		int fives = changeNeeded / 500;
 		if (fives != 0) {
-			billsNeeded -= (fives * 5);
+			changeNeeded -= (fives * 500);
 			System.out.println("Fives: " + fives);
 		}
 
-		int ones = billsNeeded / 1;
+		int ones = changeNeeded / 100;
 		if (ones != 0) {
-			billsNeeded -= (ones);
+			changeNeeded -= (ones * 100);
 			System.out.println("Ones: " + ones);
 		}
 
-	}
-
-	public static void coinsCalculator() {
-
-		int quarters = (coinsNeeded / 25);
+		int quarters = (changeNeeded / 25);
 		if (quarters != 0) {
-			coinsNeeded -= (quarters * 25);
+			changeNeeded -= (quarters * 25);
 			System.out.println("Quarters: " + quarters);
 		}
 
-		int dimes = (coinsNeeded / 10);
+		int dimes = (changeNeeded / 10);
 		if (dimes != 0) {
-			coinsNeeded -= (dimes * 10);
+			changeNeeded -= (dimes * 10);
 			System.out.println("Dimes: " + dimes);
 		}
 
-		int nickels = (coinsNeeded / 5);
+		int nickels = (changeNeeded / 5);
 		if (nickels != 0) {
-			coinsNeeded -= (nickels * 5);
+			changeNeeded -= (nickels * 5);
 			System.out.println("Nickels: " + nickels);
 		}
 
-		int pennies = (coinsNeeded / 1);
+		int pennies = (changeNeeded / 1);
 		if (pennies != 0) {
 			System.out.println("Pennies: " + pennies);
 		}
