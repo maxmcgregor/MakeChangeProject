@@ -1,76 +1,71 @@
-package week1;
+package com.skilldistillery.app;
 
 import java.util.Scanner;
 
-public class CashRegister {
+public class MakeChange {
 
-	static double itemPrice;
-	static double amountPaid;
-	static double changeNeeded;
+	static int itemPrice;
+	static int amountPaid;
+	static int changeNeeded;
 	static int billsNeeded;
-	static double coinsNeeded;
+	static int coinsNeeded;
+	static boolean customerPresent = true;
 	static Scanner scanner = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		// add a loop until the user decides to be done. see project with Ian
-		boolean customerPresent = true;
 
 		while (customerPresent) {
+
 			changeCalculator();
 
-			if (amountPaid == itemPrice) {
-
-				System.out.println("\nThat's exact change. Thank you, have a nice day!");
-
-			} else if (amountPaid < itemPrice) {
-
-				double amountOwed = itemPrice - amountPaid;
-				System.err.println("Your item costs $" + amountOwed + " more than you paid. Please pay an additional $"
-						+ amountOwed + ".");
-
-			} else {
-
-				System.out.println("\nChange of $" + changeNeeded + " to be given as follows: \n");
-				billCalculator();
-				coinsCalculator();
-
-			}
-			System.out.print("Cashier, is there another customer present? Y/N ");
-			String anotherCustomer = scanner.nextLine();
-			System.out.println();
-
-			if (anotherCustomer.equals("Y") || anotherCustomer.equals("Yes") || anotherCustomer.equals("y")
-					|| anotherCustomer.equals("yes")) {
-				customerPresent = true;
-			} else if (anotherCustomer.equals("N") || anotherCustomer.equals("n") || anotherCustomer.equals("No")
-					|| anotherCustomer.equals("no")) {
-				customerPresent = false;
-				System.out.println("Got it. Enjoy your down time. ");
-			} else {
-				System.err.println("Not a valid response.");
+			transaction();
+			
+			if (customerPresent) {
+				customerPresent();				
 			}
 		}
+
+		scanner.close();
 	}
 
 	public static void changeCalculator() {
 		System.out.print("Cashier, what is the price of the item? ");
-		itemPrice = scanner.nextDouble();
+		itemPrice = (int) (100 * scanner.nextDouble());
 
 		System.out.print("Cashier, how much money was tendered by the customer? ");
-		amountPaid = scanner.nextDouble();
+		amountPaid = (int) (100 * scanner.nextDouble());
 		scanner.nextLine();
 
 		changeNeeded = amountPaid - itemPrice;
-		billsNeeded = (int) (changeNeeded);
-		coinsNeeded = changeNeeded - billsNeeded;
+		billsNeeded = changeNeeded / 100;
+		coinsNeeded = changeNeeded - (billsNeeded * 100);
 
 	}
 
-	// use parameters int bill, int denomination then call billCalculator 4 times in
-	// main. same
+	public static void transaction() {
+		if (amountPaid == itemPrice) {
+
+			System.out.println("\nThat's exact change. Thank you, have a nice day!");
+
+		} else if (amountPaid < itemPrice) {
+
+			double amountOwed = itemPrice - amountPaid;
+			System.err.println("\nYour item costs more than you paid. Please pay the difference.\n");
+			customerPresent = false;
+
+		} else {
+
+			billCalculator();
+			coinsCalculator();
+
+		}
+	}
+
 	public static void billCalculator() {
 		// feel like this could be a method that passes bill type & denomination
-		// (twenties/20, tens/10, etc)
+		// (twenties/20, tens/10, etc) but had trouble figuring it out cleanly
+		System.out.println("\nChange to be given as follows: \n");
+
 		int twenties = billsNeeded / 20;
 		if (twenties != 0) {
 			billsNeeded -= (twenties * 20);
@@ -99,29 +94,51 @@ public class CashRegister {
 
 	public static void coinsCalculator() {
 
-		int quarters = (int) (coinsNeeded / 0.25);
+		int quarters = (coinsNeeded / 25);
 		if (quarters != 0) {
-			coinsNeeded -= (quarters * 0.25);
+			coinsNeeded -= (quarters * 25);
 			System.out.println("Quarters: " + quarters);
 		}
 
-		int dimes = (int) (coinsNeeded / 0.1);
+		int dimes = (coinsNeeded / 10);
 		if (dimes != 0) {
-			coinsNeeded -= (dimes * 0.1);
+			coinsNeeded -= (dimes * 10);
 			System.out.println("Dimes: " + dimes);
 		}
 
-		int nickels = (int) (coinsNeeded / 0.05);
+		int nickels = (coinsNeeded / 5);
 		if (nickels != 0) {
-			coinsNeeded -= (nickels * .05);
+			coinsNeeded -= (nickels * 5);
 			System.out.println("Nickels: " + nickels);
 		}
 
-		int pennies = (int) (coinsNeeded / 0.01);
+		int pennies = (coinsNeeded / 1);
 		if (pennies != 0) {
 			System.out.println("Pennies: " + pennies);
 		}
 		System.out.println();
 
+	}
+
+	public static void customerPresent() {
+		System.out.print("Cashier, is there another customer present? Y/N ");
+		String anotherCustomer = scanner.nextLine();
+		System.out.println();
+
+		if (anotherCustomer.equals("Y") || anotherCustomer.equals("Yes") || anotherCustomer.equals("y")
+				|| anotherCustomer.equals("yes")) {
+
+			customerPresent = true;
+
+		} else if (anotherCustomer.equals("N") || anotherCustomer.equals("n") || anotherCustomer.equals("No")
+				|| anotherCustomer.equals("no")) {
+
+			customerPresent = false;
+			System.out.println("Got it. Enjoy your down time. ");
+
+		} else {
+			System.err.println("Not a valid response. Assuming no one is there. Goodbye.");
+			customerPresent = false;
+		}
 	}
 }
